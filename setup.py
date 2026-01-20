@@ -173,9 +173,10 @@ class GenerateMetadataSchema(build_ext.build_ext):
   """Generate metadata python schema files."""
 
   def run(self):
-    # Skip metadata schema generation if we're doing a Python-only build
+    # Intentionally skip metadata schema generation for Python-only builds
+    # as it requires Bazel and is not needed for pure Python development
     if MP_NO_EXTENSION:
-      print('Skipping metadata schema generation (MEDIAPIPE_NO_EXTENSION=1)')
+      print('Skipping metadata schema generation for Python-only build (MEDIAPIPE_NO_EXTENSION=1)')
       return
     for target in [
         'image_segmenter_metadata_schema_py',

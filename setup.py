@@ -30,7 +30,26 @@ from setuptools.command import build_ext
 from setuptools.command import build_py
 from setuptools.command import install
 
-__version__ = 'dev'
+
+def _get_version():
+  """Get version from git tags or return 'dev' for development."""
+  try:
+    # Try to get version from git tags
+    version = subprocess.check_output(
+        ['git', 'describe', '--tags', '--abbrev=0'],
+        stderr=subprocess.DEVNULL
+    ).decode('utf-8').strip()
+    # If the version doesn't start with 'v', it's likely a plain version number
+    # Remove 'v' prefix if present for PEP 440 compliance
+    if version.startswith('v'):
+      version = version[1:]
+    return version
+  except (subprocess.CalledProcessError, FileNotFoundError):
+    # Fall back to 'dev' for local development or when git is not available
+    return '0.0.0.dev0'
+
+
+__version__ = _get_version()
 MP_DISABLE_GPU = os.environ.get('MEDIAPIPE_DISABLE_GPU') != '0'
 MP_NO_EXTENSION = os.environ.get('MEDIAPIPE_NO_EXTENSION') == '1'
 IS_WINDOWS = (platform.system() == 'Windows')

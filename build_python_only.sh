@@ -32,8 +32,8 @@ echo "Building MediaPipe Python package (without C extension)..."
 echo ""
 echo "This build will:"
 echo "  - Skip C/C++ extension compilation (libmediapipe.so)"
+echo "  - Skip metadata schema generation (requires Bazel)"
 echo "  - Build only Python source files"
-echo "  - Generate metadata schemas"
 echo ""
 
 # Set environment variable to skip C extension build

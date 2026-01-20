@@ -150,10 +150,8 @@ python3 setup.py build
 ```
 
 **Note:** The Python-only build intentionally skips:
-- **C/C++ extension compilation** (`libmediapipe.so`) - not built when flag is set
-- **Metadata schema generation** - skipped as it requires Bazel and is typically not needed for pure Python development
-
-The build command `generate_metadata_schema` is still invoked, but it returns early without performing any work when `MEDIAPIPE_NO_EXTENSION=1`.
+- **C/C++ extension compilation** (`libmediapipe.so`)
+- **Metadata schema generation** (requires Bazel; not needed for pure Python development)
 
 This build mode is suitable for:
 - Documentation generation

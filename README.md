@@ -113,6 +113,23 @@ We welcome contributions. Please follow these
 We use GitHub issues for tracking requests and bugs. Please post questions to
 the MediaPipe Stack Overflow with a `mediapipe` tag.
 
+## Releases
+
+### Building Release Wheels
+
+This repository includes a GitHub Actions workflow that automatically builds
+Python wheel files when you publish a release. The workflow builds a
+`py3-none-manylinux_2_28_x86_64.whl` file using Docker.
+
+To create a release with wheel files:
+
+1. Create a new release on GitHub
+2. Publish the release
+3. The workflow will automatically build the wheel file and upload it to the release assets
+
+The workflow uses the `Dockerfile.manylinux_2_28_x86_64` to build the wheel,
+which creates a Python 3.12 compatible wheel using the manylinux_2_28 standard.
+
 ## Resources
 
 ### Publications

@@ -130,6 +130,34 @@ To create a release with wheel files:
 The workflow uses the `Dockerfile.manylinux_2_28_x86_64` to build the wheel,
 which creates a Python 3.12 compatible wheel using the manylinux_2_28 standard.
 
+### Building Python Package Only
+
+For development or testing purposes, you can build only the Python components
+without compiling the C/C++ extension. This is faster and doesn't require
+Bazel, C++ compilers, or other native build dependencies.
+
+To build Python-only:
+
+```bash
+./build_python_only.sh
+```
+
+Or manually:
+
+```bash
+export MEDIAPIPE_NO_EXTENSION=1
+python3 setup.py build
+```
+
+**Note:** The Python-only build skips:
+- C/C++ extension compilation (`libmediapipe.so`)
+- Metadata schema generation (requires Bazel)
+
+This build mode is suitable for:
+- Documentation generation
+- Testing pure Python code
+- Rapid iteration on Python APIs without native dependencies
+
 ## Resources
 
 ### Publications

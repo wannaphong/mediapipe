@@ -32,6 +32,7 @@ from setuptools.command import install
 
 __version__ = 'dev'
 MP_DISABLE_GPU = os.environ.get('MEDIAPIPE_DISABLE_GPU') != '0'
+MP_NO_EXTENSION = os.environ.get('MEDIAPIPE_NO_EXTENSION') == '1'
 IS_WINDOWS = (platform.system() == 'Windows')
 IS_MAC = (platform.system() == 'Darwin')
 MP_ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -82,6 +83,10 @@ def _get_long_description():
 
 def _check_bazel():
   """Check Bazel binary as well as its version."""
+  
+  # Skip bazel check if we're doing a Python-only build
+  if MP_NO_EXTENSION:
+    return
 
   if not shutil.which('bazel'):
     sys.stderr.write('could not find bazel executable. Please install bazel to'
@@ -169,6 +174,11 @@ class GenerateMetadataSchema(build_ext.build_ext):
   """Generate metadata python schema files."""
 
   def run(self):
+    # Skip metadata schema generation if we're doing a Python-only build
+    if MP_NO_EXTENSION:
+      print('Skipping metadata schema generation (MEDIAPIPE_NO_EXTENSION=1)')
+      return
+      
     for target in [
         'image_segmenter_metadata_schema_py',
         'metadata_schema_py',
@@ -295,7 +305,8 @@ class BuildPy(build_py.build_py):
     _modify_opencv_cmake_rule(self.link_opencv)
     _add_mp_init_files()
     self.run_command('generate_metadata_schema')
-    self.run_command('build_ext')
+    if not MP_NO_EXTENSION:
+      self.run_command('build_ext')
     build_py.build_py.run(self)
     self.run_command('restore')
 
@@ -386,7 +397,7 @@ setuptools.setup(
     },
     ext_modules=[
         BazelExtension('//mediapipe/tasks/c:libmediapipe.so'),
-    ],
+    ] if not MP_NO_EXTENSION else [],
     zip_safe=False,
     include_package_data=True,
     classifiers=[

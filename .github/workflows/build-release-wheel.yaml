@@ -28,29 +28,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Build wheel using Docker
+      - name: Install dependencies
         run: |
-          DOCKER_BUILDKIT=1 docker build \
-            -f Dockerfile.manylinux_2_28_x86_64 \
-            -t mp_manylinux:latest \
-            --build-arg "PYTHON_BIN=/opt/python/cp312-cp312/bin/python3.12" \
-            .
+          python -m pip install --upgrade pip
+          pip install setuptools wheel build
 
-      - name: Extract wheel from Docker container
+      - name: Build Python-only wheel
+        env:
+          MEDIAPIPE_NO_EXTENSION: 1
         run: |
-          docker create -ti --name mp_pip_package_container mp_manylinux:latest
-          docker cp mp_pip_package_container:/wheelhouse/. wheelhouse/
-          docker rm -f mp_pip_package_container
+          python -m build --wheel
 
       - name: List wheel files
-        run: ls -la wheelhouse/
+        run: ls -la dist/
 
       - name: Upload wheel to release
         uses: softprops/action-gh-release@v1
         with:
-          files: wheelhouse/*.whl
+          files: dist/*.whl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

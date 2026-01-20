@@ -83,7 +83,6 @@ def _get_long_description():
 
 def _check_bazel():
   """Check Bazel binary as well as its version."""
-  
   # Skip bazel check if we're doing a Python-only build
   if MP_NO_EXTENSION:
     return
@@ -178,7 +177,6 @@ class GenerateMetadataSchema(build_ext.build_ext):
     if MP_NO_EXTENSION:
       print('Skipping metadata schema generation (MEDIAPIPE_NO_EXTENSION=1)')
       return
-      
     for target in [
         'image_segmenter_metadata_schema_py',
         'metadata_schema_py',

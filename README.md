@@ -149,9 +149,9 @@ export MEDIAPIPE_NO_EXTENSION=1
 python3 setup.py build
 ```
 
-**Note:** The Python-only build skips:
+**Note:** The Python-only build intentionally skips:
 - C/C++ extension compilation (`libmediapipe.so`)
-- Metadata schema generation (requires Bazel)
+- Metadata schema generation (requires Bazel and is typically not needed for pure Python development)
 
 This build mode is suitable for:
 - Documentation generation
